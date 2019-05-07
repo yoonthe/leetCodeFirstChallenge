@@ -1,1 +1,2 @@
-require('./15.三数之和');
+// require('./findMedianOfUnsortArray');
+require('./colorCube/ColorPuzzle.test');
