@@ -2,9 +2,13 @@ const { colors } = require('./constant');
 module.exports = class ColorCell {
   constructor() {
     this.color = colors.white;
+    this.full = false;
   }
   addRed() {
-    switch(this.color) {
+    if (this.full) {
+      return this;
+    }
+    switch (this.color) {
       case colors.white:
         this.color = colors.red;
         break;
@@ -14,14 +18,18 @@ module.exports = class ColorCell {
       case colors.blue:
         this.color = colors.purple;
         break;
-      case  colors.cyan:
+      case colors.cyan:
         this.color = colors.white;
+        this.full = true;
         break;
     }
     return this;
   }
   addGreen() {
-    switch(this.color) {
+    if (this.full) {
+      return this;
+    }
+    switch (this.color) {
       case colors.white:
         this.color = colors.green;
         break;
@@ -31,14 +39,18 @@ module.exports = class ColorCell {
       case colors.blue:
         this.color = colors.cyan;
         break;
-      case  colors.purple:
+      case colors.purple:
         this.color = colors.white;
+        this.full = true;
         break;
     }
     return this;
   }
   addBlue() {
-    switch(this.color) {
+    if (this.full) {
+      return this;
+    }
+    switch (this.color) {
       case colors.white:
         this.color = colors.blue;
         break;
@@ -48,8 +60,9 @@ module.exports = class ColorCell {
       case colors.green:
         this.color = colors.cyan;
         break;
-      case  colors.yellow:
+      case colors.yellow:
         this.color = colors.white;
+        this.full = true;
         break;
     }
     return this;
