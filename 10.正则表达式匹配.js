@@ -76,31 +76,74 @@
  * @return {boolean}
  */
 var isMatch = function (s, p) {
-  if (s.length === 0) {
-    return p.length === 0;
-  }
   if (p.length === 0) {
-    return false;
+    return s.length === 0;
   }
+  let i = 0, j = 0, token;
   const getToken = () => {
+    const token = {
+      char: p[j],
+      repeat: false,
+    };
     if (p[j + 1] === '*') {
       j += 2;
-      return p[j] + p[j + 1];
+      token.repeat = true;
     } else {
       j += 1;
-      return p[j];
+    }
+    return token;
+  };
+  const match = (char, match) => (match === '.' && typeof char !== 'undefined') || char === match;
+  while(j < p.length) {
+    token = getToken();
+    if (token.repeat) {
+      // 计算能匹配的最大范围
+      if(token.char === '.') {
+        // 从 0 -> s.length开始遍历情况
+        for (let t = i; t <= s.length; t++) {
+          const match = isMatch(s.slice(t), p.slice(j));
+          if (match) {
+            return true;
+          }
+        }
+      } else {
+        // 从 最大值 -> 0开始遍历情况
+        let t = i;
+        while(s[t] === token.char) {
+          t += 1;
+        }
+        for(; t >= i; t--) {
+          const match = isMatch(s.slice(t), p.slice(j));
+          if (match) {
+            return true;
+          }
+        }
+      }
+      return false;
+    }
+    // 匹配当前字符
+    if(match(s[i], token.char)) {
+      i += 1;
+    } else {
+      return false;
     }
   }
-  let i = 0, j = 0, token = getToken();
-  for (; i < s.length; i++) {
-    const char = s[i];
-    if (token[0] === '.') {
-      
-    }
-  }
-
+  return i === s.length;
 };
 
-// 'caabccd'
-// '.*a*abc*' .* a* b c*
+// console.log(isMatch("", "")); // true
+// console.log(isMatch("", "a")); // false
+// console.log(isMatch("", "a*")); // true
+// console.log(isMatch("a", "")); // false
+// console.log(isMatch("aa", "a")); // false
+// console.log(isMatch("aa", "a*")); // true
+// console.log(isMatch("ab", ".*")); // true
+// console.log(isMatch("aab", "c*a*b")); // true
+// console.log(isMatch("aab", "c*a*b*")); // true
+// console.log(isMatch("aab", "ca*b*")); // false
+// console.log(isMatch("mississippi", "mis*is*p*.")); // false
+// console.log(isMatch("mississippi", "mis*is*ip*.")); // true
+console.log(isMatch("a",".*..a*"));
+// "caabccd"
+// ".*a*abc*" .*a*bc*d
 
