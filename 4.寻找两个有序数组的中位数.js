@@ -40,53 +40,109 @@
  * @return {number}
  */
 var findMedianSortedArrays = function (nums1, nums2) {
-  const getMid = (arr, length) => {
-      if (length % 2 === 1) {
-          return arr[(length - 1) / 2];
-      }
-      const pos = length / 2;
-      return (arr[pos - 1] + arr[pos]) / 2;
+  const getMid = (arr, start, end) => {
+    const length = end - start;
+    if (length % 2 === 1) {
+      const pos = start + (length - 1) / 2;
+      // return [arr[pos], pos, 1];
+      return arr[pos];
+    }
+    const pos = start + length / 2 - 1;
+    // return [(arr[pos] + arr[pos + 1]) / 2, pos, 2];
+    return (arr[pos] + arr[pos + 1]) / 2;
   }
   const getSize = length => length === 2 ? 1 : Math.floor((length - 1) / 2);
-  if (nums1.length === 0) {
-      return getMid(nums2, nums2.length)[2];
-  }
-  if (nums2.length === 0) {
-      return getMid(nums1, nums1.length)[2];
+  // 保证 arr1.length > arr2.length
+  const [arr1, arr2] = nums1.length > nums2.length ? [nums1, nums2] : [nums2, nums1];
+  let arr1l = arr2l = 0, arr1r = arr1.length, arr2r = arr2.length, length = arr2.length;
+  if (arr2r === 0) {
+    return getMid(arr1, arr1l, arr1r);
   }
   // 对半查找
-  let arr1;
-  let arr2;
-  if (nums1.length > nums2.length) {
-      arr1 = nums1, arr2 = nums2;
+  while (length > 2) {
+    const mid1 = getMid(arr1, arr1l, arr1r), mid2 = getMid(arr2, arr2l, arr2r);
+    const cutSize = getSize(length);
+    if (mid1 < mid2) {
+      // 重新生成 arr
+      arr1l = arr1l + cutSize;
+      arr2r = arr2r - cutSize;
+    } else {
+      arr1r = arr1r - cutSize;
+      arr2l = arr2l + cutSize;
+    }
+    length = arr2r - arr2l;
+  }
+  // console.log(arr2l, arr2r, arr1l, arr1r);
+  const midl = arr2[arr2l], midr = arr2[arr2r - 1], arr = arr1.slice(arr1l, arr1r);
+  // const single = (arr2r - arr2l + arr.length) % 2 === 1;
+  const single = arr2r - arr2l === 1;
+  const nan = fn => (a, b) => {
+    if (typeof b === 'number' && !isNaN(b) && isFinite(b)) {
+      return fn(a, b);
+    }
+    return a;
+  }
+  const max = nan(Math.max);
+  const min = nan(Math.min);
+  if (arr.length % 2 === 1) {
+    const index = (arr.length - 1) / 2;
+    const mid = arr[index];
+    if (single) {
+      const another = mid > midl ? max(midl, arr[index - 1]) : min(midl, arr[index + 1]);
+      return (mid + another) / 2;
+    }
+    if (midl < mid && mid < midr) {
+      return mid;
+    }
+    if (mid <= midl) {
+      return min(midl, arr[index + 1]);
+    }
+    return max(midr, arr[index - 1]);
   } else {
-      arr1 = nums2, arr2 = nums1;
+    const index = arr.length / 2;
+    const left = arr[index - 1], right = arr[index];
+    if (single) {
+      return right > midl ? Math.max(left, midl) : right;
+    }
+
+    if (right <= midl) {
+      // left right midl midr
+      return (right + min(midl, arr[index + 1])) / 2;
+    }
+    if (midr <= left) {
+      // midl midr left right
+      return (left + max(midr, arr[index - 2])) / 2;
+    }
+    return (Math.max(left, midl) + Math.min(right, midr)) / 2;
   }
-  while (arr2.length > 1) {
-      const length1 = arr1.length, length2 = arr2.length;
-      const mid1 = getMid(arr1, length1), mid2 = getMid(arr2, length2);
-      const sliceSize1 = getSize(length1), sliceSize2 = getSize(length2);
-      if (mid1 < mid2) {
-          // 重新生成 arr
-          arr1 = arr1.slice(sliceSize1);
-          arr2 = arr2.slice(0, length2 - sliceSize2);
-      } else {
-          arr1 = arr1.slice(0, length1 - sliceSize1);
-          arr2 = arr2.slice(sliceSize2);
-      }
-  }
-  console.log(arr1, arr2);
 };
 
-findMedianSortedArrays([1, 3], [2]);
+// const d = (...args) => {
+//   const t = findMedianSortedArrays(...args);
+//   console.log('--------- input  -----------');
+//   console.log(...args);
+//   console.log('--------- output -----------');
+//   console.log(t);
+// }
 
-findMedianSortedArrays([1, 3, 5, 7, 9], [2, 4, 6, 8, 10]);
+// d([1, 3], [2]);
 
-findMedianSortedArrays([1, 3, 5, 7, 9, 11], [2, 4, 6, 8, 10]);
+// d([1, 3, 5, 7, 9], [2, 4, 6, 8, 10]);
 
-findMedianSortedArrays([1, 3, 5, 7, 9], [200, 250, 300]);
+// d([1, 3, 5, 7, 9, 11], [2, 4, 6, 8, 10]);
 
-findMedianSortedArrays([200, 201, 202], [1, 31, 501, 701]);
+// d([1, 3, 5, 7, 9], [200, 250, 300]);
 
-findMedianSortedArrays([200, 201, 202], [1, 31, 501,   , 1301, 1901, 2201, 3201, 4501, 5501]);
+// d([200, 201, 202], [1, 31, 501, 701]);
 
+// d([200, 201, 202], [1, 31, 501, 701, 1301, 1901, 2201, 3201, 4501, 5501]);
+
+// d([200], [1, 31, 501, 701, 1301, 1901, 2201, 3201, 4501, 5501]);
+
+// d([1, 2, 3, 200, 300], [10, 11, 12, 13, 14, 15, 16, 17, 18, 19])
+// d([1, 2], [-1, 3]);
+// d([1, 2], [3, 4]);
+// 3, 200, 300 | 12, 13, 14, 15
+// 3, 200 | 13, 14, 15
+// 3 | 14, 15
+// 14
