@@ -110,7 +110,7 @@ var palindromePairs = function (words) {
 
 // @lc code=end
 
-const logFactory = require('./logFactory');
+const logFactory = require('./utils/logFactory');
 
 const d = logFactory(palindromePairs);
 
