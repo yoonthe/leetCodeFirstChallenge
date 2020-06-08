@@ -1,0 +1,24 @@
+{
+  "name": "leetcodefirstchallenge",
+  "version": "0.0.1",
+  "description": "> try to solve leetcode problems as much as I can!",
+  "main": "index.js",
+  "dependencies": {},
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yoonthe/leetCodeFirstChallenge.git"
+  },
+  "keywords": [
+    "leetcode"
+  ],
+  "author": "Yoonthe",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/yoonthe/leetCodeFirstChallenge/issues"
+  },
+  "homepage": "https://github.com/yoonthe/leetCodeFirstChallenge#readme"
+}
