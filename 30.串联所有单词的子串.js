@@ -1,3 +1,10 @@
+/*
+ * @lc app=leetcode.cn id=30 lang=javascript
+ *
+ * [30] 串联所有单词的子串
+ */
+
+// @lc code=start
 class TrieNode {
   constructor(letter, isEnd) {
     this.letter = letter;
@@ -23,7 +30,7 @@ class TrieNode {
     return false;
   }
 }
-export default class Trie {
+class Trie {
   constructor(words) {
     this.root = new TrieNode('', false);
     words.forEach(word => this.add(word));
@@ -34,14 +41,37 @@ export default class Trie {
       root = root.join(word[i], i === word.length - 1);
     }
   }
-  search(word) {
+  walk(string, start) {
+    let ends = [];
     let root = this.root;
-    for (let i = 0; i < word.length; i++) {
-      root = root.next(word[i]);
-      if (root === false) {
-        return false;
+    for (let i = 0; i < string.length; i++) {
+      root = root.next(string[i]);
+      if (!root) {
+        return ends;
+      }
+      if (root.isEnd) {
+        ends.push(i + start);
       }
     }
-    return root.isEnd;
   }
 }
+/**
+ * @param {string} s
+ * @param {string[]} words
+ * @return {number[]}
+ */
+var findSubstring = function(s, words) {
+  const preTree = new Trie(words);
+  const res = [];
+  let start = [0];
+  while (start.length > 0) {
+    const nextStart = [];
+    for (let i = 0; i < start.length; i++) {
+      const si = start[i];
+      const ends = preTree.walk(s, si);
+      if ()
+    }
+  }
+};
+// @lc code=end
+
