@@ -15,14 +15,11 @@ var combinationSum2 = function(candidates, target) {
   const res = [], out = [], len = nums.length;
   let next, num;
   const dfs = (t, s) => {
-    let lastNum;
     for (let i = s; i < len; ++i) {
       num = nums[i];
-      if(num === lastNum) {
-        // can't be same
+      if (i > s && num == nums[i - 1]) {
         continue;
       }
-      lastNum = num;
       out.push(num);
       next = t - num;
       if (next > 0) {
