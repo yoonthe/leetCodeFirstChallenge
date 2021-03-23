@@ -1,16 +1,16 @@
 /*
- * @lc app=leetcode.cn id=51 lang=javascript
+ * @lc app=leetcode.cn id=52 lang=javascript
  *
- * [51] N 皇后
+ * [52] N皇后 II
  */
 
 // @lc code=start
 /**
  * @param {number} n
- * @return {string[][]}
+ * @return {number}
  */
-var solveNQueens = function(n) {
-  const results = [];
+var totalNQueens = function(n) {
+  let results = 0;
   let res = [];
   const goRow = (row, i = 0, num = n) => {
     for(let c = i; c < num; c++) {
@@ -18,7 +18,7 @@ var solveNQueens = function(n) {
         res.push(c);
         if (row === n - 1) {
           // save result
-          results.push([...res]);
+          results += 1;
         } else {
           // go next row
           goRow(row + 1);
@@ -30,21 +30,11 @@ var solveNQueens = function(n) {
   const mid = Math.ceil((n - 1) / 2);
   goRow(0, 0, mid);
   // reverse
-  const reverseRes = [...results].reverse().map(res => res.map(i => n - 1 - i));
+  results += results;
   if (mid === (n - 1) / 2) {
     goRow(0, mid, mid + 1);
   }
-
-  if (results.length === 0) {
-    return results;
-  }
-  
-  const strings = [];
-  for(let i = 0; i < n; i++) {
-    strings[i] = new Array(n).fill('.');
-    strings[i][i] = 'Q';
-    strings[i] = strings[i].join('');
-  }
-  return [...results, ...reverseRes].map(res => res.map(num => strings[num]));
+  return results;
 };
 // @lc code=end
+
