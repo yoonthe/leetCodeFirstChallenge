@@ -22,7 +22,6 @@ var plusOne = function(digits) {
   }
   digits[i] = digits[i] + 1;
   return digits;
-};// @lc code=end
-
-plusOne([1,2,4,4]);
+};
+// @lc code=end
 
