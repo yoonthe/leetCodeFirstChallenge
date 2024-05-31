@@ -98,7 +98,6 @@ var solveSudoku = function(board) {
     console.log(rowSpaces);
     // to guess
     while(rowSpaces.find(spaces => spaces.length > 0)) {
-      rowSpaces
+      // record state
     }
 };
-
